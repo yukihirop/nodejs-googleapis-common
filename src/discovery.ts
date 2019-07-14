@@ -24,7 +24,11 @@ import {Schema, Schemas} from './schema';
 
 export type EndpointCreator = (options: GlobalOptions, google: {}) => Endpoint;
 
-const readFile = util.promisify(fs.readFile);
+const readFile = typeof fs.readFile === 'function' ?
+  util.promisify(fs.readFile) :
+  async function(){
+    throw new Error('Invalid operation.');
+  };
 
 export interface DiscoveryOptions {
   includePrivate?: boolean;
